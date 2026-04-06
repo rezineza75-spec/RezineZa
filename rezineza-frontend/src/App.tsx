@@ -38,8 +38,7 @@ const pagesWithoutNavbar = ["/connexion", "/inscription", "/admin"];  // true si
         <Route path="/connexion" element={<Connexion />} />
         <Route path="/inscription" element={<Inscription />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/mention-legales" element={<MentionsLegales />} />
-      </Routes>
+        <Route path="/mentions-legales" element={<MentionsLegales />} />      </Routes>
       {/* Le Footer s'affiche sur toutes les pages sauf connexion et inscription */}
       {!hideNavbar && <Footer />}
     </>

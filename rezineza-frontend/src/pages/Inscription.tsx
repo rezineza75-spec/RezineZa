@@ -11,22 +11,18 @@ const Inscription = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // useNavigate permet de rediriger l'utilisateur vers une autre page
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     const { error } = await authClient.signUp.email({ name, email, password });
-
     if (error) {
       setError(error.message || "Erreur lors de l'inscription");
       setLoading(false);
       return;
     }
-
     setLoading(false);
     navigate("/");
   };
@@ -35,18 +31,18 @@ const Inscription = () => {
     setError("");
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "http://localhost:5173/",
+      callbackURL: window.location.origin + "/",
     });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#9C9475]">
+    <div className="min-h-screen flex items-center justify-center bg-[#9C9475] px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl p-14 w-full max-w-lg flex flex-col gap-6 shadow-lg"
+        className="bg-white rounded-2xl p-6 md:p-14 w-full max-w-lg flex flex-col gap-6 shadow-lg"
       >
         <div className="flex justify-center mb-2">
-          <img src={logo} alt="Rézine'Za" className="h-36" />
+          <img src={logo} alt="Rézine'Za" className="h-24 md:h-36" />
         </div>
         <p className="font-['Lato'] text-base text-center text-gray-500">
           Créer un compte
@@ -115,7 +111,6 @@ const Inscription = () => {
         >
           ← Retour à l'accueil
         </Link>
-
       </form>
     </div>
   );

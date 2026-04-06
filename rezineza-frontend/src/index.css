@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+:root {
+  --breakpoint-xl2: 1200px;
+}

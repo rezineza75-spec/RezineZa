@@ -1,70 +1,75 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Button from "../components/Button";
-import echecsImg from "../Images/echecs.jpeg";
-import bagueImg from "../Images/bague.jpeg";
-import cadeauxImg from "../Images/cadeaux.jpg";
-import cadreImg from "../Images/cadre.jpeg";
-import chevalImg from "../Images/cheval.jpg";
-import collierImg from "../Images/collier.jpeg";
-import dessousDeVerreImg from "../Images/dessousDeVerre.jpeg";
-import penseursImg from "../Images/penseurs.jpeg";
-import saladierImg from "../Images/saladier.jpeg";
+import echecsHeader from "../images/echecsHeader.jpeg"; // image de secours si pas de hero en BDD
 
+// Interface pour les images du site
+interface SiteImage {
+  id: number;
+  url: string;
+  publicId: string;
+  type: string;
+  order: number;
+}
 
-// Tableau contenant toutes les images du carousel
-// Chaque objet contient la source de l'image et son texte alternatif
-const carouselImages = [
-  { src: bagueImg, alt: "Bague en résine" },
-  { src: cadeauxImg, alt: "Cadeaux en résine" },
-  { src: cadreImg, alt: "Cadre en résine" },
-  { src: chevalImg, alt: "Cheval en résine" },
-  { src: collierImg, alt: "Collier en résine" },
-  { src: dessousDeVerreImg, alt: "Dessous de verre en résine" },
-  { src: penseursImg, alt: "Penseurs en résine" },
-  { src: saladierImg, alt: "Saladier en résine" },
-];
+const API_URL = "http://localhost:3000/api";
 
-
-// Composant principal de la page d'accueil
 const Home = () => {
+  // State pour l'image hero (fond de la bannière)
+  const [heroImage, setHeroImage] = useState<string | null>(null);
+  // State pour les images du carrousel
+  const [carouselImages, setCarouselImages] = useState<SiteImage[]>([]);
 
-  // Initialisation du carousel Embla
-  // loop: true → permet de tourner en boucle
-  // align: "start" → aligne les slides au début
-  // Autoplay → fait défiler automatiquement les images
+  // Chargement des images depuis l'API au montage du composant
+  useEffect(() => {
+    const fetchSiteImages = async () => {
+      try {
+        const res = await fetch(`${API_URL}/site-images`);
+        if (res.ok) {
+          const images: SiteImage[] = await res.json();
+
+          // On sépare les images hero et carousel
+          const hero = images.find((img) => img.type === "hero");
+          const carousel = images
+            .filter((img) => img.type === "carousel")
+            .sort((a, b) => a.order - b.order); // on trie par ordre
+
+          if (hero) setHeroImage(hero.url);
+          setCarouselImages(carousel);
+        }
+      } catch (error) {
+        console.error("Erreur chargement images du site", error);
+      }
+    };
+
+    fetchSiteImages();
+  }, []);
+
   const [emblaRef] = useEmblaCarousel(
     { loop: true, align: "start" },
     [Autoplay({ delay: 2000, stopOnInteraction: false })]
   );
 
   return (
-
-    // Conteneur principal de la page
     <div className="flex flex-col w-full">
 
-      {/* Bannière principale avec une image de fond */}
+      {/* Bannière principale
+          Si une image hero est définie en BDD on l'utilise,
+          sinon on affiche l'image locale par défaut */}
       <section
-        className="relative w-full h-[350px] bg-cover bg-center flex items-center"
-        style={{ backgroundImage: `url(${echecsImg})` }}
+        className="relative w-full h-[250px] md:h-[350px] bg-cover bg-center flex items-center"
+        style={{ backgroundImage: `url(${heroImage || echecsHeader})` }}
       >
-
-        {/* Overlay sombre pour améliorer la lisibilité du texte */}
         <div className="absolute inset-0 bg-black/40" />
-
-        {/* Contenu principal de la bannière */}
-        <div className="relative z-10 flex flex-col items-center w-full gap-3 px-8">
-
-          {/* Titre principal */}
-          <h1 className="font-['Playfair_Display'] text-white text-3xl font-medium text-center">
+        <div className="relative z-10 flex flex-col items-center w-full gap-3 px-6 md:px-8">
+          <h1 className="font-['Playfair_Display'] text-white text-2xl md:text-3xl font-medium text-center">
             Création uniques en résine
           </h1>
-          <p className="font-['Playfair_Display'] text-white text-base italic text-center">
+          <p className="font-['Playfair_Display'] text-white text-sm md:text-base italic text-center">
             Décoration et Bijoux artisanaux
           </p>
-
-          {/* Bouton qui redirige vers la page des créations */}
           <Link to="/creations">
             <Button
               text="Découvrez mes créations"
@@ -76,57 +81,72 @@ const Home = () => {
         </div>
       </section>
 
-
-      <div className="py-12 px-6">
-        {/* Bloc avec un fond coloré qui présente la marque */}
-        <div className="bg-[#405882] rounded-[50px] py-12 px-16">
-          <p className="font-['Lato'] text-white text-center text-base leading-relaxed max-w-2xl mx-auto">
-            Bienvenue chez Rézine'Za, l'univers où la résine devient art.
-            Chaque création est unique, façonnée à la main avec passion et précision.
-            Bijoux, accessoires et objets de décoration — laissez-vous séduire par
-            l'authenticité de nos pièces artisanales.
+      {/* Bloc présentation */}
+      <div className="py-8 md:py-12 px-4 md:px-6">
+        <div className="bg-[#405882] rounded-[30px] md:rounded-[50px] py-8 md:py-12 px-6 md:px-10">
+          <p className="font-['Lato'] text-white text-center text-sm md:text-base mb-4 leading-relaxed">
+            Créations en résine époxy - Objets artisanaux uniques et personnalisés.
+            Bienvenue dans mon atelier de créations en résine époxy. Découvrez des créations en résine époxy de qualité, fabriquées avec passion, qui allient artisanat, créativité et modernité. Chaque objet en résine est conçu pour être unique, original et durable. Grâce aux effets de transparence, aux couleurs et aux inclusions décoratives, la résine permet de créer des pièces modernes et élégantes.
+          </p>
+          <p className="font-['Lato'] text-white text-center text-sm md:text-base mb-4 leading-relaxed">
+            Dans ma collection, vous trouverez différents objets en résine : objets de décoration, accessoires personnalisés et idées cadeaux originales. Chaque création est fabriquée artisanalement, ce qui garantit des pièces uniques avec des finitions soignées.
+          </p>
+          <p className="font-['Lato'] text-white text-center text-sm md:text-base mb-4 leading-relaxed">
+            Mon objectif est de proposer des objets en résine époxy, parfaits pour apporter une touche de design et d'originalité à votre intérieur. Que vous cherchiez une décoration en résine, un objet personnalisé ou un cadeau fait main, vous trouverez ici des créations uniques adaptées à toutes les occasions.
+          </p>
+          <p className="font-['Lato'] text-white text-center text-sm md:text-base leading-relaxed">
+            J'aime aussi relever des défis, donc n'hésitez pas et contactez-moi si vous recherchez une pièce authentique et unique qui n'apparaît pas sur mon site. Je suis ouverte à vos envies : votre imagination, ma création !
           </p>
         </div>
-
       </div>
-      <section className="flex flex-col w-full gap-8 pb-12">
-        {/* Titre de la section avec des lignes décoratives */}
-        <div className="flex items-center gap-4 w-full px-6">
-          <div className="flex-1 bg-[#405882] rounded-full" style={{ height: "1.5px" }} />
-          <h2 className="font-['Playfair_Display'] text-[#9C9475] text-2xl whitespace-nowrap">
+
+      {/* Section carrousel */}
+      <section className="flex flex-col w-full gap-6 md:gap-8 pb-8 md:pb-12">
+        <div className="flex items-center gap-4 w-full px-4 md:px-6">
+          <div className="flex-1 bg-[#405882] rounded-full" style={{ height: "1.6px" }} />
+          <h2 className="font-['Playfair_Display'] text-[#9C9475] text-xl md:text-2xl whitespace-nowrap">
             quelques réalisations
           </h2>
-          <div className="flex-1 bg-[#405882] rounded-full" style={{ height: "1.5px" }} />
+          <div className="flex-1 bg-[#405882] rounded-full" style={{ height: "1.6px" }} />
         </div>
 
-        {/* Carousel Embla */}
-        <div className="w-full overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-3">
-
-            {/* On duplique les images pour que le défilement en boucle soit plus fluide visuellement*/}
-            {[...carouselImages, ...carouselImages].map((image, index) => (
-              <div key={index} className="min-w-[30%] flex-shrink-0">
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-72 object-cover"
-                />
-              </div>
-            ))}
-
+        {/* Si des images sont chargées depuis la BDD on les affiche */}
+        {carouselImages.length > 0 && (
+          <div className="w-full overflow-hidden" ref={emblaRef}>
+            <div className="flex">
+              {/* On duplique les images pour le loop infini */}
+              {[...carouselImages, ...carouselImages].map((image, index) => (
+                <div
+                  key={index}
+                  className="min-w-[90%] md:min-w-[30%] flex-shrink-0 pl-3"
+                >
+                  <img
+                    src={image.url}
+                    alt={`Réalisation ${index + 1}`}
+                    className="w-full h-56 md:h-80 object-cover rounded-xl md:rounded-none"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-      <div className="w-full bg-[#405882]" style={{ height: "1.5px" }} />
-      <div className="py-12 px-6">
-        {/* Bloc qui incite l'utilisateur à contacter pour une création personnalisée */}
-        <div className="bg-[#9C9475] rounded-[50px] py-12 px-16 flex flex-col items-center gap-6">
+        )}
 
-          <h2 className="font-['Playfair_Display'] text-white text-2xl text-center">
+        {/* Message si aucune image carousel n'est définie */}
+        {carouselImages.length === 0 && (
+          <p className="font-['Lato'] text-gray-400 text-center text-sm py-8">
+            Aucune réalisation à afficher pour le moment.
+          </p>
+        )}
+      </section>
+
+      <div className="w-full bg-[#405882]" style={{ height: "1.1px" }} />
+
+      {/* Bloc sur mesure */}
+      <div className="py-8 md:py-12 px-4 md:px-6">
+        <div className="bg-[#9C9475] rounded-[30px] md:rounded-[50px] py-10 md:py-12 px-6 md:px-16 flex flex-col items-center gap-6">
+          <h2 className="font-['Playfair_Display'] text-white text-xl md:text-2xl text-center">
             Des envies sur mesure ?
           </h2>
-
-          {/* Bouton vers la page contact */}
           <Link to="/contact">
             <Button
               text="Contactez-moi"
@@ -135,9 +155,7 @@ const Home = () => {
               radius="rounded-full"
             />
           </Link>
-
         </div>
-
       </div>
 
     </div>

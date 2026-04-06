@@ -1,24 +1,21 @@
 import type { Favorite } from "../interfaces/favorites.interface";
 
-const API_URL = "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-// Récupérer tous les favoris de l'utilisateur connecté
 export const getFavorites = async (): Promise<Favorite[]> => {
-    const res = await fetch(`${API_URL}/favorites`, { credentials: "include" });
+    const res = await fetch(`${API_URL}/api/favorites`, { credentials: "include" });
     if (!res.ok) throw new Error("Erreur lors de la récupération des favoris");
     return res.json();
 };
 
-// Vérifier si un article est en favori retourne isFavorite: true/false 
 export const checkFavorite = async (articleId: number): Promise<{ isFavorite: boolean }> => {
-    const res = await fetch(`${API_URL}/favorites/check/${articleId}`, { credentials: "include" });
+    const res = await fetch(`${API_URL}/api/favorites/check/${articleId}`, { credentials: "include" });
     if (!res.ok) throw new Error("Erreur lors de la vérification du favori");
     return res.json();
 };
 
-// Ajouter un article en favori
 export const addFavorite = async (articleId: number): Promise<Favorite> => {
-    const res = await fetch(`${API_URL}/favorites/${articleId}`, {
+    const res = await fetch(`${API_URL}/api/favorites/${articleId}`, {
         method: "POST",
         credentials: "include",
     });
@@ -29,9 +26,8 @@ export const addFavorite = async (articleId: number): Promise<Favorite> => {
     return res.json();
 };
 
-// Retirer un article des favoris
 export const removeFavorite = async (articleId: number): Promise<void> => {
-    const res = await fetch(`${API_URL}/favorites/${articleId}`, {
+    const res = await fetch(`${API_URL}/api/favorites/${articleId}`, {
         method: "DELETE",
         credentials: "include",
     });

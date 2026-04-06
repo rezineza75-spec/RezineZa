@@ -155,3 +155,14 @@ model Review {
    @@map("article_images")
  }
 
+ model SiteImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  publicId  String
+  type      String   // "hero" ou "carousel"
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("site_images")
+}
+

@@ -5,66 +5,49 @@ import Button from "../components/Button";
 import logo from "../Images/Logo.png";
 
 const Connexion = () => {
-  // States pour stocker les valeurs du formulaire
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // State pour afficher un message d'erreur
   const [error, setError] = useState("");
-  // State pour afficher un état de chargement pendant la connexion
   const [loading, setLoading] = useState(false);
 
-  // Hook React Router pour rediriger l'utilisateur
   const navigate = useNavigate();
 
-  // Fonction appelée lors de la soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
-    // Empêche le rechargement de la page
     e.preventDefault();
-    // Réinitialisation des messages
     setError("");
     setLoading(true);
-    // Appel au système d'authentification avec email + mot de passe
     const { error } = await authClient.signIn.email({ email, password });
-    // Si une erreur survient
     if (error) {
       setError(error.message || "Erreur lors de la connexion");
       setLoading(false);
       return;
     }
-    // Si la connexion fonctionne
     setLoading(false);
-    // Redirection vers la page d'accueil
     navigate("/");
   };
 
-  // Fonction pour se connecter avec Google
   const handleGoogle = async () => {
-    // Réinitialise les erreurs
     setError("");
-    // Lance la connexion OAuth Google
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "http://localhost:5173/",
+      callbackURL:  window.location.origin + "/",
     });
   };
 
   return (
-    // Conteneur principal centré sur la page
-    <div className="min-h-screen flex items-center justify-center bg-[#9C9475]">
+    <div className="min-h-screen flex items-center justify-center bg-[#9C9475] px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl p-14 w-full max-w-lg flex flex-col gap-6 shadow-lg"
+        className="bg-white rounded-2xl p-6 md:p-14 w-full max-w-lg flex flex-col gap-6 shadow-lg"
       >
         <div className="flex justify-center mb-2">
-          <img src={logo} alt="Rézine'Za" className="h-36" />
+          <img src={logo} alt="Rézine'Za" className="h-24 md:h-36" />
         </div>
         <p className="font-['Lato'] text-base text-center text-gray-500">
           Se connecter
         </p>
         {error && (
-          <p className="font-['Lato'] text-sm text-red-500 text-center">
-            {error}
-          </p>
+          <p className="font-['Lato'] text-sm text-red-500 text-center">{error}</p>
         )}
         <input
           type="email"
@@ -105,7 +88,6 @@ const Connexion = () => {
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-
           Continuer avec Google
         </button>
         <Link
@@ -120,7 +102,6 @@ const Connexion = () => {
         >
           ← Retour à l'accueil
         </Link>
-
       </form>
     </div>
   );

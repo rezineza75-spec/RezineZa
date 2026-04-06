@@ -8,120 +8,93 @@ import type { Article } from "../interfaces/articles.interface";
 import Button from "../components/Button";
 
 const ArticleDetail = () => {
-  // On récupère l'id de l'article dans l'URL (/creations/:id)
   const { id } = useParams<{ id: string }>();
-  // Session de l'utilisateur connecté
   const { data: session } = authClient.useSession();
-  // Hook pour naviguer entre les pages
   const navigate = useNavigate();
-  // State contenant les données de l'article
   const [article, setArticle] = useState<Article | null>(null);
-  // State indiquant si l'article est dans les favoris
   const [isFavorite, setIsFavorite] = useState(false);
-  // State pour l'image principale affichée
   const [mainImage, setMainImage] = useState<string | null>(null);
 
-    //  RÉCUPÉRATION DE L'ARTICLE
   useEffect(() => {
     const fetchArticle = async () => {
       if (!id) return;
-      // Appel API pour récupérer l'article
       const data = await getArticleById(Number(id));
       setArticle(data);
-      // On récupère l'image principale
-      const main =
-        data.images?.find((img) => img.isMain) ||
-        data.images?.[0];
-      // On définit l'image principale affichée
+      const main = data.images?.find((img) => img.isMain) || data.images?.[0];
       if (main) setMainImage(main.url);
     };
     fetchArticle();
   }, [id]);
 
-    //  VÉRIFICATION SI L'ARTICLE EST EN FAVORI
   useEffect(() => {
     const fetchFavorite = async () => {
-      // On vérifie seulement si l'utilisateur est connecté
       if (!session || !id) return;
       try {
-        // Appel API pour savoir si l'article est en favori
         const data = await checkFavorite(Number(id));
         setIsFavorite(data.isFavorite);
       } catch (error) {
-        console.error(
-          "Erreur lors de la vérification du favori",
-          error
-        );
+        console.error("Erreur lors de la vérification du favori", error);
       }
     };
     fetchFavorite();
   }, [session, id]);
 
-
-  //  AJOUT / SUPPRESSION FAVORI
   const handleFavorite = async () => {
-    // Si l'utilisateur n'est pas connecté
     if (!session) {
-      // On le redirige vers la page de connexion
       navigate("/connexion");
       return;
     }
     try {
       if (isFavorite) {
-        // Suppression du favori
         await removeFavorite(Number(id));
         setIsFavorite(false);
       } else {
-        // Ajout en favori
         await addFavorite(Number(id));
         setIsFavorite(true);
       }
     } catch (error) {
-      console.error(
-        "Erreur lors de la gestion des favoris",
-        error
-      );
+      console.error("Erreur lors de la gestion des favoris", error);
     }
   };
 
-    //  LOADER SI ARTICLE NON CHARGÉ
   if (!article) {
     return (
       <div className="flex justify-center items-center py-32">
-        <p className="font-['Lato'] text-gray-400">
-          Chargement...
-        </p>
+        <p className="font-['Lato'] text-gray-400">Chargement...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-full px-8 py-10 gap-8">
+    <div className="flex flex-col w-full px-4 md:px-8 py-8 md:py-10 gap-8">
+
       <Link
         to="/creations"
         className="font-['Lato'] text-[#405882] text-sm hover:underline w-fit"
       >
         ← Retour aux créations
       </Link>
-          {/* CARTE PRINCIPALE */}
-      <div className="flex bg-white rounded-[20px] overflow-hidden shadow-md w-full">
-            {/* IMAGE PRINCIPALE */}
-        <div className="w-1/2 min-h-[300px] relative">
+
+      {/* CARTE PRINCIPALE
+          Sur mobile : image en haut, infos en bas
+          Sur desktop : image à gauche, infos à droite */}
+      <div className="flex flex-col md:flex-row bg-white rounded-[20px] overflow-hidden shadow-md w-full">
+
+        {/* IMAGE PRINCIPALE */}
+        <div className="w-full md:w-1/2 relative">
           {mainImage ? (
             <img
               src={mainImage}
               alt={article.title}
-              className="w-full h-[700px] object-cover"
+              className="w-full h-[300px] md:h-[700px] object-cover"
             />
           ) : (
-            // Placeholder si aucune image
-            <div className="w-full h-full min-h-[450px] bg-gray-200 flex items-center justify-center">
-              <span className="font-['Lato'] text-gray-400">
-                Pas d'image
-              </span>
+            <div className="w-full h-[300px] md:h-[450px] bg-gray-200 flex items-center justify-center">
+              <span className="font-['Lato'] text-gray-400">Pas d'image</span>
             </div>
           )}
-          {/* Miniatures des autres images */}
+
+          {/* Miniatures */}
           {article.images && article.images.length > 1 && (
             <div className="absolute bottom-3 left-3 flex gap-2">
               {article.images.map((image) => (
@@ -129,9 +102,8 @@ const ArticleDetail = () => {
                   key={image.id}
                   src={image.url}
                   alt={article.title}
-                  // Changer l'image principale au clic
                   onClick={() => setMainImage(image.url)}
-                  className={`w-14 h-14 object-cover rounded-lg cursor-pointer border-2 transition-all ${
+                  className={`w-10 h-10 md:w-14 md:h-14 object-cover rounded-lg cursor-pointer border-2 transition-all ${
                     mainImage === image.url
                       ? "border-[#405882]"
                       : "border-white opacity-70 hover:opacity-100"
@@ -142,40 +114,42 @@ const ArticleDetail = () => {
           )}
         </div>
 
-            {/* INFORMATIONS ARTICLE */}
-        <div className="w-1/2 p-10 flex flex-col gap-5 justify-center">
+        {/* INFORMATIONS ARTICLE */}
+        <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col gap-5 justify-center">
+
           {article.category && (
             <span className="inline-block bg-[#9C9475] text-white text-xs tracking-widest uppercase px-3 py-1 rounded-full w-fit">
               {article.category.name}
             </span>
           )}
-          <h1 className="font-['Playfair_Display'] text-[#405882] text-3xl leading-snug">
+
+          <h1 className="font-['Playfair_Display'] text-[#405882] text-2xl md:text-3xl leading-snug">
             {article.title}
           </h1>
-          <p className="text-[#9C9475] text-2xl font-bold font-['Lato']">
-            {article.price
-              ? `${article.price.toFixed(2)}€`
-              : "Sur devis"}
+
+          <p className="text-[#9C9475] text-xl md:text-2xl font-bold font-['Lato']">
+            {article.price ? `${article.price.toFixed(2)}€` : "Sur devis"}
           </p>
+
           <div className="h-px bg-[#e8e4d8]" />
+
           <p className="font-['Lato'] text-gray-500 text-sm leading-relaxed">
             {article.description}
           </p>
+
           <div className="flex items-center gap-2">
             <span
               className={`w-2 h-2 rounded-full ${
-                article.isAvailable
-                  ? "bg-green-400"
-                  : "bg-red-400"
+                article.isAvailable ? "bg-green-400" : "bg-red-400"
               }`}
             />
             <p className="font-['Lato'] text-sm text-gray-500">
-              {article.isAvailable
-                ? "Disponible"
-                : "Non disponible"}
+              {article.isAvailable ? "Disponible" : "Non disponible"}
             </p>
           </div>
+
           <div className="h-px bg-[#e8e4d8]" />
+
           <div className="flex items-center gap-4">
             <Link to="/contact">
               <Button
@@ -195,11 +169,7 @@ const ArticleDetail = () => {
             >
               <Heart
                 size={18}
-                className={
-                  isFavorite
-                    ? "text-white fill-white"
-                    : "text-red-900"
-                }
+                className={isFavorite ? "text-white fill-white" : "text-red-900"}
               />
             </button>
           </div>

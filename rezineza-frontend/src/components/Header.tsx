@@ -49,34 +49,36 @@ const Header = () => {
       {/* MENU BURGER — visible uniquement sur mobile quand ouvert */}
       {menuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg z-50 flex flex-col py-4">
-          <Link
-            to="/"
-            onClick={() => setMenuOpen(false)}
-            className="font-['Lato'] text-white bg-[#9C9475] px-8 py-4 text-sm hover:bg-[#405882] transition-colors"
-          >
-            Accueil
-          </Link>
-          <Link
-            to="/contact"
-            onClick={() => setMenuOpen(false)}
-            className="font-['Lato'] text-white bg-[#9C9475] px-8 py-4 text-sm hover:bg-[#405882] transition-colors border-t border-white/20"
-          >
-            Contact
-          </Link>
-          <Link
-            to="/creations"
-            onClick={() => setMenuOpen(false)}
-            className="font-['Lato'] text-white bg-[#9C9475] px-8 py-4 text-sm hover:bg-[#405882] transition-colors border-t border-white/20"
-          >
-            Créations
-          </Link>
-          <Link
-            to="/avis"
-            onClick={() => setMenuOpen(false)}
-            className="font-['Lato'] text-white bg-[#9C9475] px-8 py-4 text-sm hover:bg-[#405882] transition-colors border-t border-white/20"
-          >
-            Avis
-          </Link>
+
+          {[
+            { to: "/", label: "Accueil" },
+            { to: "/contact", label: "Contact" },
+            { to: "/creations", label: "Créations" },
+            { to: "/avis", label: "Avis" },
+          ].map((item, index) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              onClick={() => setMenuOpen(false)}
+              className={`
+                font-['Playfair_Display']
+                text-sm
+                text-white
+                bg-[#9C9475]
+                px-8 py-4
+                inline-block
+                transition-all
+                duration-300
+                ease-in-out
+                hover:shadow-xl
+                hover:-translate-y-1
+                ${index !== 0 ? "border-t border-white/20" : ""}
+              `}
+            >
+              {item.label}
+            </Link>
+          ))}
+
         </div>
       )}
     </header>

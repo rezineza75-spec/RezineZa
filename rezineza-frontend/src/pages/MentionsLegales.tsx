@@ -2,19 +2,21 @@ import { Link } from "react-router-dom";
 
 const MentionsLegales = () => {
   return (
-    <div className="flex flex-col items-center py-16 px-16 gap-10">
+    <div className="flex flex-col items-center py-10 md:py-16 px-4 md:px-16 gap-8 md:gap-10">
+
+      {/* Titre avec lignes décoratives */}
       <div className="flex items-center gap-4 w-full max-w-4xl">
         <div className="flex-1 bg-[#405882] rounded-full" style={{ height: "1.5px" }} />
-        <h1 className="font-['Playfair_Display'] text-[#9C9475] text-2xl whitespace-nowrap">
+        <h1 className="font-['Playfair_Display'] text-[#9C9475] text-xl md:text-2xl whitespace-nowrap">
           Mentions Légales
         </h1>
         <div className="flex-1 bg-[#405882] rounded-full" style={{ height: "1.5px" }} />
       </div>
 
-      <div className="flex flex-col gap-8 w-full max-w-4xl">
+      <div className="flex flex-col gap-6 md:gap-8 w-full max-w-4xl">
 
-        <div className="bg-[#405882] rounded-[30px] p-8 flex flex-col gap-4">
-          <h2 className="font-['Playfair_Display'] text-white text-xl">Éditeur du site</h2>
+        <div className="bg-[#405882] rounded-[20px] md:rounded-[30px] p-6 md:p-8 flex flex-col gap-4">
+          <h2 className="font-['Playfair_Display'] text-white text-lg md:text-xl">Éditeur du site</h2>
           <div className="h-px bg-white/20" />
           <p className="font-['Lato'] text-white/80 text-sm leading-relaxed">
             Le présent site a été réalisé par :
@@ -24,8 +26,8 @@ const MentionsLegales = () => {
           </div>
         </div>
 
-        <div className="bg-[#9C9475] rounded-[30px] p-8 flex flex-col gap-4">
-          <h2 className="font-['Playfair_Display'] text-white text-xl">Responsable de la publication</h2>
+        <div className="bg-[#9C9475] rounded-[20px] md:rounded-[30px] p-6 md:p-8 flex flex-col gap-4">
+          <h2 className="font-['Playfair_Display'] text-white text-lg md:text-xl">Responsable de la publication</h2>
           <div className="h-px bg-white/20" />
           <div className="flex flex-col gap-2 font-['Lato'] text-sm">
             <p className="text-white"><span className="font-bold">Lhombart Isabelle</span></p>
@@ -41,24 +43,27 @@ const MentionsLegales = () => {
           </div>
         </div>
 
-        <div className="bg-[#405882] rounded-[30px] p-8 flex flex-col gap-4">
-          <h2 className="font-['Playfair_Display'] text-white text-xl">Hébergement</h2>
+        <div className="bg-[#405882] rounded-[20px] md:rounded-[30px] p-6 md:p-8 flex flex-col gap-4">
+          <h2 className="font-['Playfair_Display'] text-white text-lg md:text-xl">Hébergement</h2>
           <div className="h-px bg-white/20" />
           <p className="font-['Lato'] text-white/80 text-sm leading-relaxed">
-            À compléter lors de la mise en ligne du site.
+            Front-end : Vercel
+          </p>
+          <p className="font-['Lato'] text-white/80 text-sm leading-relaxed">
+            Back-end : Railway
           </p>
         </div>
 
-        <div className="bg-[#9C9475] rounded-[30px] p-8 flex flex-col gap-4">
-          <h2 className="font-['Playfair_Display'] text-white text-xl">Propriété intellectuelle</h2>
+        <div className="bg-[#9C9475] rounded-[20px] md:rounded-[30px] p-6 md:p-8 flex flex-col gap-4">
+          <h2 className="font-['Playfair_Display'] text-white text-lg md:text-xl">Propriété intellectuelle</h2>
           <div className="h-px bg-white/20" />
           <p className="font-['Lato'] text-white text-sm leading-relaxed">
             L'ensemble du contenu présent sur ce site (textes, images, photographies, créations, logo, etc.) est la propriété exclusive de Rézine'Za. Toute reproduction, modification ou diffusion sans autorisation préalable est strictement interdite.
           </p>
         </div>
 
-        <div className="bg-[#405882] rounded-[30px] p-8 flex flex-col gap-4">
-          <h2 className="font-['Playfair_Display'] text-white text-xl">Données personnelles</h2>
+        <div className="bg-[#405882] rounded-[20px] md:rounded-[30px] p-6 md:p-8 flex flex-col gap-4">
+          <h2 className="font-['Playfair_Display'] text-white text-lg md:text-xl">Données personnelles</h2>
           <div className="h-px bg-white/20" />
           <p className="font-['Lato'] text-white text-sm leading-relaxed">
             Les informations collectées via le formulaire de contact (nom, email, message) sont utilisées uniquement pour répondre à vos demandes. Elles ne sont jamais transmises à des tiers.
