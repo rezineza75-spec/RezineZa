@@ -13,8 +13,7 @@ interface SiteImage {
   order: number;
 }
 
-const API_URL = "https://rezineza-production.up.railway.app/api";
-const Home = () => {
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;const Home = () => {
   // State pour l'image hero (fond de la bannière)
   const [heroImage, setHeroImage] = useState<string | null>(null);
   // State pour les images du carrousel

@@ -41,8 +41,7 @@ interface SiteImage {
   order: number;
 }
 
-const API_URL = "http://localhost:3000/api";
-
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 const Admin = () => {
   const { data: session, isPending } = authClient.useSession();
   const navigate = useNavigate();
