@@ -13,8 +13,7 @@ interface SiteImage {
   order: number;
 }
 
-const API_URL = "http://localhost:3000/api";
-
+const API_URL = "https://rezineza-production.up.railway.app/api";
 const Home = () => {
   // State pour l'image hero (fond de la bannière)
   const [heroImage, setHeroImage] = useState<string | null>(null);
