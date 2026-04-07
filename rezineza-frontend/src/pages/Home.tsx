@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Button from "../components/Button";
-import echecsHeader from "../images/echecsHeader.jpeg"; // image de secours si pas de hero en BDD
 
 // Interface pour les images du site
 interface SiteImage {
@@ -60,8 +59,7 @@ const Home = () => {
           sinon on affiche l'image locale par défaut */}
       <section
         className="relative w-full h-[250px] md:h-[350px] bg-cover bg-center flex items-center"
-        style={{ backgroundImage: `url(${heroImage || echecsHeader})` }}
-      >
+style={{ backgroundImage: heroImage ? `url(${heroImage})` : "none" }}      >
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 flex flex-col items-center w-full gap-3 px-6 md:px-8">
           <h1 className="font-['Playfair_Display'] text-white text-2xl md:text-3xl font-medium text-center">
