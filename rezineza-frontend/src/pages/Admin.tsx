@@ -31,8 +31,6 @@ interface Review {
   rating: number;
   createdAt: string;
 }
-
-// Interface pour les images du site (hero + carousel)
 interface SiteImage {
   id: number;
   url: string;
@@ -42,6 +40,7 @@ interface SiteImage {
 }
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+
 const Admin = () => {
   const { data: session, isPending } = authClient.useSession();
   const navigate = useNavigate();
@@ -66,7 +65,6 @@ const Admin = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [message, setMessage] = useState("");
 
-  // States pour la gestion des images du site
   const [siteImages, setSiteImages] = useState<SiteImage[]>([]);
   const [uploadingHero, setUploadingHero] = useState(false);
   const [uploadingCarousel, setUploadingCarousel] = useState(false);
@@ -103,34 +101,25 @@ const Admin = () => {
     const res = await fetch(`${API_URL}/reviews`, { credentials: "include" });
     if (res.ok) setReviews(await res.json());
   };
-
-  // Récupère toutes les images du site (hero + carousel)
   const fetchSiteImages = async () => {
     const res = await fetch(`${API_URL}/site-images`, { credentials: "include" });
     if (res.ok) setSiteImages(await res.json());
   };
 
-  // Upload d'une image du site (hero ou carousel)
   const handleUploadSiteImage = async (file: File, type: "hero" | "carousel") => {
     if (type === "hero") setUploadingHero(true);
     else setUploadingCarousel(true);
-
     try {
       const formData = new FormData();
       formData.append("image", file);
       formData.append("type", type);
-      // Pour le carousel, on définit l'ordre en fonction du nombre d'images existantes
       if (type === "carousel") {
         const carouselCount = siteImages.filter(img => img.type === "carousel").length;
         formData.append("order", String(carouselCount));
       }
-
       const res = await fetch(`${API_URL}/site-images`, {
-        method: "POST",
-        credentials: "include",
-        body: formData,
+        method: "POST", credentials: "include", body: formData,
       });
-
       if (res.ok) {
         setMessage(type === "hero" ? "Image hero mise à jour !" : "Image ajoutée au carrousel !");
         await fetchSiteImages();
@@ -138,21 +127,14 @@ const Admin = () => {
     } catch (error) {
       console.error("Erreur upload image site", error);
     }
-
     if (type === "hero") setUploadingHero(false);
     else setUploadingCarousel(false);
   };
 
-  // Suppression d'une image du site
   const handleDeleteSiteImage = async (id: number, type: string) => {
     const label = type === "hero" ? "l'image hero" : "cette image du carrousel";
     if (!confirm(`Supprimer ${label} ?`)) return;
-
-    const res = await fetch(`${API_URL}/site-images/${id}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-
+    const res = await fetch(`${API_URL}/site-images/${id}`, { method: "DELETE", credentials: "include" });
     if (res.ok) {
       setMessage(type === "hero" ? "Image hero supprimée !" : "Image supprimée du carrousel !");
       await fetchSiteImages();
@@ -278,7 +260,6 @@ const Admin = () => {
     setMenuOpen(false);
   };
 
-  // On ajoute "accueil" dans les items du menu
   const menuItems = [
     { id: "accueil", label: "Page d'accueil", icon: ImageIcon },
     { id: "articles", label: "Articles", icon: Package },
@@ -339,7 +320,6 @@ const Admin = () => {
     </>
   );
 
-  // Images hero et carousel séparées
   const heroImage = siteImages.find(img => img.type === "hero");
   const carouselImages = siteImages
     .filter(img => img.type === "carousel")
@@ -353,9 +333,12 @@ const Admin = () => {
         <MenuContent />
       </aside>
 
-      {/* HEADER MOBILE */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#405882] px-4 py-3 flex items-center justify-end">
-        <button onClick={() => setMenuOpen(!menuOpen)} className="text-white">
+      {/* HEADER MOBILE — barre fixe en haut avec nom de section + burger */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#405882] px-4 py-3 flex items-center justify-between">
+        <span className="font-['Playfair_Display'] text-white text-sm capitalize">
+          {menuItems.find(m => m.id === activeSection)?.label ?? activeSection}
+        </span>
+        <button onClick={() => setMenuOpen(!menuOpen)} className="text-white p-1">
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -364,7 +347,7 @@ const Admin = () => {
       {menuOpen && (
         <div className="md:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMenuOpen(false)}>
           <div
-            className="bg-[#405882] w-64 h-full flex flex-col py-8 px-4 gap-2 pt-16"
+            className="bg-[#405882] w-64 h-full flex flex-col py-8 px-4 gap-2 pt-16 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <MenuContent />
@@ -386,14 +369,14 @@ const Admin = () => {
             SECTION PAGE D'ACCUEIL
         ================== */}
         {activeSection === "accueil" && (
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6 md:gap-8">
             <h1 className="font-['Playfair_Display'] text-[#405882] text-xl md:text-2xl">
               Page d'accueil
             </h1>
 
-            {/* --- IMAGE HERO --- */}
+            {/* IMAGE HERO */}
             <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm flex flex-col gap-4">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <div>
                   <h2 className="font-['Lato'] text-[#405882] font-bold text-base">
                     Image de fond (bannière)
@@ -402,7 +385,6 @@ const Admin = () => {
                     C'est l'image affichée en arrière-plan de la première section. Une seule image à la fois.
                   </p>
                 </div>
-                {/* Input caché déclenché par le bouton */}
                 <input
                   ref={heroInputRef}
                   type="file"
@@ -416,34 +398,27 @@ const Admin = () => {
                 <button
                   onClick={() => heroInputRef.current?.click()}
                   disabled={uploadingHero}
-                  className="flex items-center gap-2 bg-[#405882] text-white font-['Lato'] text-sm px-4 py-2 rounded-full hover:opacity-90 disabled:opacity-50 whitespace-nowrap"
+                  className="flex items-center gap-2 bg-[#405882] text-white font-['Lato'] text-sm px-4 py-2 rounded-full hover:opacity-90 disabled:opacity-50 whitespace-nowrap self-start sm:self-auto"
                 >
                   <Upload size={16} />
                   {uploadingHero ? "Upload..." : heroImage ? "Changer" : "Ajouter"}
                 </button>
               </div>
 
-              {/* Aperçu de l'image hero */}
               {heroImage ? (
                 <div className="relative rounded-xl overflow-hidden group">
-                  <img
-                    src={heroImage.url}
-                    alt="Image hero"
-                    className="w-full h-48 object-cover"
-                  />
-                  {/* Overlay au survol avec bouton supprimer */}
+                  <img src={heroImage.url} alt="Image hero" className="w-full h-40 md:h-48 object-cover" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <button
                       onClick={() => handleDeleteSiteImage(heroImage.id, "hero")}
                       className="p-2 bg-white rounded-full text-red-400 hover:bg-red-400 hover:text-white transition-colors"
-                      title="Supprimer"
                     >
                       <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="w-full h-48 bg-gray-100 rounded-xl flex flex-col items-center justify-center gap-2">
+                <div className="w-full h-40 md:h-48 bg-gray-100 rounded-xl flex flex-col items-center justify-center gap-2">
                   <ImageIcon size={32} className="text-gray-300" />
                   <p className="font-['Lato'] text-gray-400 text-sm">Aucune image hero définie</p>
                   <p className="font-['Lato'] text-gray-300 text-xs">L'image par défaut du site sera utilisée</p>
@@ -451,9 +426,9 @@ const Admin = () => {
               )}
             </div>
 
-            {/* --- IMAGES CARROUSEL --- */}
+            {/* IMAGES CARROUSEL */}
             <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm flex flex-col gap-4">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <div>
                   <h2 className="font-['Lato'] text-[#405882] font-bold text-base">
                     Images du carrousel
@@ -462,7 +437,6 @@ const Admin = () => {
                     Ces images défilent automatiquement dans la section « quelques réalisations ».
                   </p>
                 </div>
-                {/* Input caché pour le carrousel */}
                 <input
                   ref={carouselInputRef}
                   type="file"
@@ -476,42 +450,47 @@ const Admin = () => {
                 <button
                   onClick={() => carouselInputRef.current?.click()}
                   disabled={uploadingCarousel}
-                  className="flex items-center gap-2 bg-[#9C9475] text-white font-['Lato'] text-sm px-4 py-2 rounded-full hover:opacity-90 disabled:opacity-50 whitespace-nowrap"
+                  className="flex items-center gap-2 bg-[#9C9475] text-white font-['Lato'] text-sm px-4 py-2 rounded-full hover:opacity-90 disabled:opacity-50 whitespace-nowrap self-start sm:self-auto"
                 >
                   <Plus size={16} />
                   {uploadingCarousel ? "Upload..." : "Ajouter"}
                 </button>
               </div>
 
-              {/* Grille des images du carrousel */}
               {carouselImages.length === 0 ? (
                 <div className="w-full h-32 bg-gray-100 rounded-xl flex flex-col items-center justify-center gap-2">
                   <ImageIcon size={28} className="text-gray-300" />
                   <p className="font-['Lato'] text-gray-400 text-sm">Aucune image dans le carrousel</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                // Sur mobile : 2 colonnes / Desktop : 3 colonnes
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
                   {carouselImages.map((image) => (
                     <div key={image.id} className="relative rounded-xl overflow-hidden group">
                       <img
                         src={image.url}
                         alt={`Carousel ${image.order + 1}`}
-                        className="w-full h-28 md:h-36 object-cover"
+                        className="w-full h-24 sm:h-28 md:h-36 object-cover"
                       />
-                      {/* Badge ordre */}
-                      <span className="absolute top-2 left-2 bg-[#405882] text-white text-xs px-2 py-0.5 rounded-full font-['Lato']">
+                      <span className="absolute top-1.5 left-1.5 bg-[#405882] text-white text-xs px-1.5 py-0.5 rounded-full font-['Lato']">
                         #{image.order + 1}
                       </span>
-                      {/* Overlay avec bouton supprimer au survol */}
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      {/* Sur mobile on affiche toujours le bouton supprimer (pas de hover sur touch) */}
+                      <div className="absolute inset-0 bg-black/40 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
                         <button
                           onClick={() => handleDeleteSiteImage(image.id, "carousel")}
                           className="p-2 bg-white rounded-full text-red-400 hover:bg-red-400 hover:text-white transition-colors"
-                          title="Supprimer"
                         >
                           <Trash2 size={14} />
                         </button>
                       </div>
+                      {/* Bouton supprimer visible en permanence sur mobile */}
+                      <button
+                        onClick={() => handleDeleteSiteImage(image.id, "carousel")}
+                        className="md:hidden absolute top-1.5 right-1.5 p-1.5 bg-white/90 rounded-full text-red-400"
+                      >
+                        <Trash2 size={12} />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -554,7 +533,8 @@ const Admin = () => {
                   onChange={(e) => setArticleForm({ ...articleForm, description: e.target.value })}
                   className="border border-gray-200 rounded-xl px-4 py-2 font-['Lato'] text-sm outline-none focus:border-[#405882] resize-none h-24"
                 />
-                <div className="flex flex-col md:flex-row gap-4">
+                {/* Sur mobile : empilés / Desktop : côte à côte */}
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                   <input
                     type="number" placeholder="Prix (vide = Sur devis)" value={articleForm.price}
                     onChange={(e) => setArticleForm({ ...articleForm, price: e.target.value })}
@@ -676,18 +656,17 @@ const Admin = () => {
                 contacts.map((contact) => (
                   <div key={contact.id} className="bg-white rounded-2xl p-4 md:p-6 shadow-sm flex flex-col gap-2">
                     <div className="flex justify-between items-start">
-                      <div>
-                        <p className="font-['Lato'] text-[#405882] font-bold text-sm">{contact.name}</p>
-                        <p className="font-['Lato'] text-[#9C9475] text-xs">{contact.email}</p>
-                      </div>
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <p className="font-['Lato'] text-gray-300 text-xs hidden sm:block">
+                      <div className="min-w-0 flex-1 pr-3">
+                        <p className="font-['Lato'] text-[#405882] font-bold text-sm truncate">{contact.name}</p>
+                        <p className="font-['Lato'] text-[#9C9475] text-xs truncate">{contact.email}</p>
+                        {/* Date visible sur mobile aussi */}
+                        <p className="font-['Lato'] text-gray-300 text-xs mt-0.5">
                           {new Date(contact.createdAt).toLocaleDateString("fr-FR")}
                         </p>
-                        <button onClick={() => handleDeleteContact(contact.id)} className="p-2 rounded-xl hover:bg-red-50 text-red-400">
-                          <Trash2 size={16} />
-                        </button>
                       </div>
+                      <button onClick={() => handleDeleteContact(contact.id)} className="p-2 rounded-xl hover:bg-red-50 text-red-400 flex-shrink-0">
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                     {contact.subject && (
                       <p className="font-['Lato'] text-gray-500 text-sm font-medium">{contact.subject}</p>
@@ -712,7 +691,7 @@ const Admin = () => {
               ) : (
                 reviews.map((review) => (
                   <div key={review.id} className="bg-white rounded-2xl p-4 md:p-6 shadow-sm flex justify-between items-start">
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 flex-1 min-w-0 pr-3">
                       <p className="font-['Lato'] text-[#405882] font-bold text-sm">{review.name}</p>
                       <p className="font-['Lato'] text-gray-500 text-sm">{review.comment}</p>
                       <div className="flex gap-1">
@@ -735,10 +714,11 @@ const Admin = () => {
 
       {/* MODAL GESTION DES IMAGES ARTICLES */}
       {imageModalArticle && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 md:p-6">
-          <div className="bg-white rounded-2xl p-4 md:p-6 w-full max-w-2xl flex flex-col gap-5 max-h-[85vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6">
+          {/* Sur mobile : sheet qui monte du bas / Desktop : modal centré */}
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl p-4 md:p-6 w-full sm:max-w-2xl flex flex-col gap-5 max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
             <div className="flex justify-between items-center">
-              <h2 className="font-['Playfair_Display'] text-[#405882] text-lg md:text-xl truncate pr-4">
+              <h2 className="font-['Playfair_Display'] text-[#405882] text-base md:text-xl truncate pr-4">
                 Images — {imageModalArticle.title}
               </h2>
               <button onClick={() => setImageModalArticle(null)} className="p-2 rounded-xl hover:bg-gray-100 text-gray-400 flex-shrink-0">
@@ -775,7 +755,25 @@ const Admin = () => {
                         Principale
                       </span>
                     )}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    {/* Boutons toujours visibles sur mobile */}
+                    <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 bg-gradient-to-t from-black/50 to-transparent md:hidden">
+                      {!image.isMain && (
+                        <button
+                          onClick={() => handleSetMainImage(imageModalArticle.id, image.id)}
+                          className="p-1.5 bg-white rounded-full text-[#405882]"
+                        >
+                          <StarFill size={13} />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDeleteImage(imageModalArticle.id, image.id)}
+                        className="p-1.5 bg-white rounded-full text-red-400"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                    {/* Hover overlay sur desktop */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity hidden md:flex items-center justify-center gap-2">
                       {!image.isMain && (
                         <button
                           onClick={() => handleSetMainImage(imageModalArticle.id, image.id)}

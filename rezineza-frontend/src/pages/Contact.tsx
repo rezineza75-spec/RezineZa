@@ -5,51 +5,42 @@ import Button from "../components/Button";
 import { sendContact } from "../api/contact";
 
 const Contact = () => {
-  // States pour stocker les valeurs du formulaire
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [creation, setCreation] = useState("");
   const [description, setDescription] = useState("");
-  // State pour afficher un message de succès ou d'erreur
   const [message, setMessage] = useState("");
 
-  // Fonction exécutée lors de l'envoi du formulaire
   const handleSubmit = async () => {
     try {
-      // Vérification des champs obligatoires
       if (!prenom || !email || !description) {
         setMessage("Veuillez remplir tous les champs obligatoires");
         return;
       }
-      // Appel API pour envoyer le message
       await sendContact({
-        name: `${prenom} ${nom}`.trim(), // concatène prénom + nom
+        name: `${prenom} ${nom}`.trim(),
         email,
-        subject: creation || null, // sujet optionnel
+        subject: creation || null,
         message: description,
       });
-      // Réinitialisation des champs après envoi
       setPrenom("");
       setNom("");
       setEmail("");
       setCreation("");
       setDescription("");
-      // Message de confirmation
       setMessage("Votre message a bien été envoyé !");
     } catch (error) {
-      // Message d'erreur si problème
       setMessage("Une erreur est survenue, veuillez réessayer");
     }
   };
 
   return (
-    // Conteneur principal de la page
-    <div className="flex flex-col justify-center items-center py-16 px-16 gap-10">
-          {/* BLOC COMMANDES NON PERSONNALISÉES
-          Pour les articles déjà présents sur le site */}
-      <div className="bg-[#405882] rounded-[40px] p-10 w-full max-w-4xl flex flex-col items-center gap-4 text-center">
-        <h2 className="font-['Playfair_Display'] text-white text-2xl">
+    <div className="flex flex-col justify-center items-center py-10 px-4 sm:px-8 md:px-16 gap-8 md:gap-10">
+
+      {/* BLOC COMMANDES NON PERSONNALISÉES */}
+      <div className="bg-[#405882] rounded-[30px] md:rounded-[40px] p-6 md:p-10 w-full max-w-4xl flex flex-col items-center gap-4 text-center">
+        <h2 className="font-['Playfair_Display'] text-white text-xl md:text-2xl">
           Vous souhaitez commander une création du site ?
         </h2>
         <p className="font-['Lato'] text-white/80 text-sm leading-relaxed max-w-xl">
@@ -57,7 +48,7 @@ const Contact = () => {
           contactez-moi directement sur mes réseaux sociaux pour organiser
           la commande et la livraison.
         </p>
-        <div className="flex items-center gap-6 mt-2">
+        <div className="flex items-center gap-4 md:gap-6 mt-2 flex-wrap justify-center">
           <a
             href="https://www.instagram.com/rezine_za/"
             target="_blank"
@@ -79,15 +70,19 @@ const Contact = () => {
         </div>
       </div>
 
-          {/* FORMULAIRE DE CONTACT
-          Pour les commandes personnalisées */}
+      {/* FORMULAIRE DE CONTACT */}
       <div className="flex flex-col items-center w-full">
-        <h1 className="font-['Lato'] text-[#405882] text-2xl text-center mb-10">
+        <h1 className="font-['Lato'] text-[#405882] text-xl md:text-2xl text-center mb-8 md:mb-10 px-2">
           Une création sur mesure ? Envoyez-moi votre message !
         </h1>
-        <div className="bg-[#9C9475] rounded-[40px] p-12 w-full max-w-4xl">
-          <div className="flex gap-12">
-            <div className="flex flex-col gap-5 flex-1">
+
+        <div className="bg-[#9C9475] rounded-[30px] md:rounded-[40px] p-6 sm:p-8 md:p-12 w-full max-w-4xl">
+
+          {/* Sur mobile : colonne unique / Sur desktop : deux colonnes */}
+          <div className="flex flex-col md:flex-row gap-5 md:gap-12">
+
+            {/* Colonne gauche */}
+            <div className="flex flex-col gap-4 md:gap-5 flex-1">
               <div className="flex flex-col gap-1">
                 <label className="font-['Lato'] text-white text-sm">Prénom</label>
                 <input
@@ -120,7 +115,8 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 flex-1">
+            {/* Colonne droite */}
+            <div className="flex flex-col gap-4 md:gap-5 flex-1">
               <div className="flex flex-col gap-1">
                 <label className="font-['Lato'] text-white text-sm">Création</label>
                 <input
@@ -131,18 +127,19 @@ const Contact = () => {
                   className="w-full h-11 bg-white rounded-xl px-4 font-['Lato'] text-sm outline-none"
                 />
               </div>
-
               <div className="flex flex-col gap-1">
                 <label className="font-['Lato'] text-white text-sm">Description</label>
                 <textarea
                   placeholder="La description de ce que vous souhaitez"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-white rounded-[20px] p-4 font-['Lato'] text-sm outline-none resize-none h-48"
+                  className="w-full bg-white rounded-[20px] p-4 font-['Lato'] text-sm outline-none resize-none h-36 md:h-48"
                 />
               </div>
             </div>
+
           </div>
+
           {message && (
             <p
               className={`font-['Lato'] text-center mt-4 text-sm ${
@@ -152,11 +149,13 @@ const Contact = () => {
               {message}
             </p>
           )}
-          <div className="flex justify-center mt-8">
+
+          <div className="flex justify-center mt-6 md:mt-8">
             <Button text="Envoyer" type="button" onClick={handleSubmit} />
           </div>
         </div>
       </div>
+
       <Link
         to="/"
         className="font-['Lato'] text-[#405882] text-sm hover:underline"

@@ -50,7 +50,7 @@ const MentionsLegales = () => {
             Front-end : Vercel
           </p>
           <p className="font-['Lato'] text-white/80 text-sm leading-relaxed">
-            Back-end : Railway
+            Back-end : Render
           </p>
         </div>
 

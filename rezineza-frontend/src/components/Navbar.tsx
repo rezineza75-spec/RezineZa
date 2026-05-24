@@ -8,6 +8,7 @@ interface NavbarProps {
   justify?: string;
   direction?: "row" | "col";
   padding?: string;
+  linkPadding?: string; // permet de réduire le padding des liens (ex: dans le footer)
 }
 
 const Navbar = ({
@@ -18,6 +19,7 @@ const Navbar = ({
   justify = "justify-center",
   direction = "row",
   padding = "py-4",
+  linkPadding = "px-4 py-2", // valeur par défaut inchangée
 }: NavbarProps) => {
 
   const linkStyle = `
@@ -26,8 +28,7 @@ const Navbar = ({
     font-normal
     ${textColor}
     inline-block
-    px-4
-    py-2
+    ${linkPadding}
     rounded-md
     transition-all
     duration-300

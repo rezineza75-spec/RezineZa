@@ -14,8 +14,19 @@ import * as Express from 'express';
 const app: Express.Application = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
-  credentials: true,
+origin: (origin, callback) => {
+const allowed = [
+"http://localhost:5173",
+"http://localhost:5174",
+process.env.FRONTEND_URL,
+].filter(Boolean);
+if (!origin || allowed.includes(origin)) {
+callback(null, true);
+} else {
+callback(new Error("Not allowed by CORS"));
+}
+},
+credentials: true,
 }));
 
 app.all("/api/auth/{*splat}", toNodeHandler(auth));
