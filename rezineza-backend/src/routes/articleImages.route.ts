@@ -1,8 +1,8 @@
 import express from "express";
 import multer from "multer";
-import { authMiddleware } from "@/middlewares/auth.middleware";
-import { adminMiddleware } from "@/middlewares/admin.middleware";
-import * as articleImageController from "@/controllers/articleImage.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { adminMiddleware } from "../middlewares/admin.middleware";
+import * as articleImageController from "../controllers/articleImage.controller";
 
 const router: express.Router = express.Router();
 

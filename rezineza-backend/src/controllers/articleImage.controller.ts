@@ -1,7 +1,7 @@
 // controllers/articleImage.controller.ts
 import { Request, Response, NextFunction } from "express";
 import multer from "multer";
-import * as imageService from "@/services/articleImage.service";
+import * as imageService from "../services/articleImage.service";
 
 // Upload une image pour un article
 // Le fichier est récupéré via req.file (mis en place par le middleware Multer dans les routes)

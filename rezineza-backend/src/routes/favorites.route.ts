@@ -1,7 +1,7 @@
 // routes/favorites.route.ts
 import express from "express";
-import { authMiddleware } from "@/middlewares/auth.middleware";
-import * as favoriteController from "@/controllers/favorite.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import * as favoriteController from "../controllers/favorite.controller";
 
 const router: express.Router = express.Router();
 

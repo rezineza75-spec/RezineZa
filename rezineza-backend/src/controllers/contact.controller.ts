@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createContactSchema } from "@/dtos/contact.dto";
-import * as contactService from "@/services/contact.service";
+import { createContactSchema } from "../dtos/contact.dto";
+import * as contactService from "../services/contact.service";
 
 export const getAll = async (req: Request, res: Response) => {
     try {

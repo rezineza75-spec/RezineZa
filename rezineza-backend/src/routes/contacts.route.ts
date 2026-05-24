@@ -1,7 +1,7 @@
 import express from "express";
-import * as contactController from "@/controllers/contact.controller";
-import { authMiddleware } from "@/middlewares/auth.middleware";
-import { adminMiddleware } from "@/middlewares/admin.middleware";
+import * as contactController from "../controllers/contact.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { adminMiddleware } from "../middlewares/admin.middleware";
 
 const router: express.Router = express.Router();
 

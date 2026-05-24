@@ -1,5 +1,5 @@
 import db from "../lib/db";
-import type { CreateCategoryDto, UpdateCategoryDto, PatchCategoryDto } from "@/dtos/categorie.dto";
+import type { CreateCategoryDto, UpdateCategoryDto, PatchCategoryDto } from "../dtos/categorie.dto";
 
 export async function getAllCategories(search?: string) {
     return db.category.findMany({

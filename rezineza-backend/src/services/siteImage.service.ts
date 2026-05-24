@@ -1,6 +1,6 @@
-import db from "@/lib/db";
-import cloudinary from "@/lib/cloudinary";
-import type { CreateSiteImageDto, UpdateOrderDto } from "@/dtos/siteImage.dto";
+import db from "../lib/db";
+import cloudinary from "../lib/cloudinary";
+import type { CreateSiteImageDto, UpdateOrderDto } from "../dtos/siteImage.dto";
 
 // Récupérer toutes les images, avec filtre optionnel par type
 export const getAllSiteImages = async (type?: string) => {

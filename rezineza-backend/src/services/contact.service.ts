@@ -1,7 +1,7 @@
 // contact.service.ts
 import db from "../lib/db";
 import { Resend } from "resend";
-import type { CreateContactDto } from "@/dtos/contact.dto";
+import type { CreateContactDto } from "../dtos/contact.dto";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 export async function getAllContacts() {

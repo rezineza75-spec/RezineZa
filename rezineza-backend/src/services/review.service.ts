@@ -1,5 +1,5 @@
-import db from "@/lib/db";
-import type { CreateReviewDto, UpdateReviewDto, PatchReviewDto } from "@/dtos/review.dto";
+import db from "../lib/db";
+import type { CreateReviewDto, UpdateReviewDto, PatchReviewDto } from "../dtos/review.dto";
 
 export const getAllReviews = async (search?: string) => {
     return db.review.findMany({

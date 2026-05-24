@@ -1,5 +1,5 @@
 import db from "../lib/db";
-import type { CreateArticleDto, UpdateArticleDto, PatchArticleDto } from "@/dtos/article.dto";
+import type { CreateArticleDto, UpdateArticleDto, PatchArticleDto } from "../dtos/article.dto";
 
 export const getAllArticles =  async (search? : string) =>{
     return db.article.findMany({

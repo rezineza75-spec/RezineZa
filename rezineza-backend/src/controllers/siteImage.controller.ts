@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import multer from "multer";
-import * as siteImageService from "@/services/siteImage.service";
-import { createSiteImageSchema, updateOrderSchema } from "@/dtos/siteImage.dto";
+import * as siteImageService from "../services/siteImage.service";
+import { createSiteImageSchema, updateOrderSchema } from "../dtos/siteImage.dto";
 
 // GET / — public, filtre optionnel par ?type=hero ou ?type=carousel
 export const getAll = async (req: Request, res: Response) => {

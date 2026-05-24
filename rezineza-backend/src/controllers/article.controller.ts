@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createArticleSchema, updateArticleSchema, patchArticleSchema } from "@/dtos/article.dto";
-import * as articleService from "@/services/article.service";
+import { createArticleSchema, updateArticleSchema, patchArticleSchema } from "../dtos/article.dto";
+import * as articleService from "../services/article.service";
 
 export const getAll = async (req: Request, res: Response) => {
     try {

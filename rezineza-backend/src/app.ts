@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "@/lib/auth";
-import categoriesRouter from "@/routes/categories.route";
-import articlesRouter from "@/routes/articles.route";
-import articleImagesRouter from "@/routes/articleImages.route";
-import reviewsRouter from "@/routes/reviews.route";
-import favoritesRouter from "@/routes/favorites.route";
-import contactsRouter from "@/routes/contacts.route"; 
-import siteImagesRouter from "@/routes/siteImages.route";
+import { auth } from "./lib/auth";
+import categoriesRouter from "./routes/categories.route";
+import articlesRouter from "./routes/articles.route";
+import articleImagesRouter from "./routes/articleImages.route";
+import reviewsRouter from "./routes/reviews.route";
+import favoritesRouter from "./routes/favorites.route";
+import contactsRouter from "./routes/contacts.route"; 
+import siteImagesRouter from "./routes/siteImages.route";
 import * as Express from 'express';
 
 const app: Express.Application = express();

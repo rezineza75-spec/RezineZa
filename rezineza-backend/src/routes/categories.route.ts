@@ -1,7 +1,7 @@
 import express from "express";
-import { authMiddleware } from "@/middlewares/auth.middleware";
-import { adminMiddleware } from "@/middlewares/admin.middleware";
-import * as categoryController from "@/controllers/categorie.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { adminMiddleware } from "../middlewares/admin.middleware";
+import * as categoryController from "../controllers/categorie.controller";
 
 const router: express.Router = express.Router();
 

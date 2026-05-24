@@ -1,5 +1,5 @@
-import db from "@/lib/db";
-import cloudinary from "@/lib/cloudinary";
+import db from "../lib/db";
+import cloudinary from "../lib/cloudinary";
 
 // Upload une image sur Cloudinary et la sauvegarde en base
 // On reçoit l'id de l'article et le buffer du fichier (envoyé par Multer)

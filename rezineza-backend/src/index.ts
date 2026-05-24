@@ -1,10 +1,10 @@
-import app from "@/app";
-import db from "@/lib/db";
+import app from "./app";
+import db from "./lib/db";
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
-  console.log(`Server is running on port${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
   try {
     await db.$connect();
     console.log("Database connected successfully");

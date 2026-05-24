@@ -1,9 +1,9 @@
 // routes/siteImage.routes.ts
 import express from "express";
 import multer from "multer";
-import { authMiddleware } from "@/middlewares/auth.middleware";
-import { adminMiddleware } from "@/middlewares/admin.middleware";
-import * as siteImageController from "@/controllers/siteImage.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { adminMiddleware } from "../middlewares/admin.middleware";
+import * as siteImageController from "../controllers/siteImage.controller";
 
 const router: express.Router = express.Router();
 

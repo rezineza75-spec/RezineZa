@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createCategorySchema, updateCategorySchema, patchCategorySchema } from "@/dtos/categorie.dto";
-import * as categoryService from "@/services/categorie.service";
+import { createCategorySchema, updateCategorySchema, patchCategorySchema } from "../dtos/categorie.dto";
+import * as categoryService from "../services/categorie.service";
 
 export const getAll = async (req: Request, res: Response) => {
     try {

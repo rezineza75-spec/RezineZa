@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import * as favoriteService from "@/services/favorite.service";
-import { createFavoriteSchema } from "@/dtos/favorite.dto";
+import * as favoriteService from "../services/favorite.service";
+import { createFavoriteSchema } from "../dtos/favorite.dto";
 
 export const getAll = async (req: Request, res: Response) => {
     try {
