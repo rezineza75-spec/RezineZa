@@ -2,36 +2,33 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
+
 import categoriesRouter from "./routes/categories.route";
 import articlesRouter from "./routes/articles.route";
 import articleImagesRouter from "./routes/articleImages.route";
 import reviewsRouter from "./routes/reviews.route";
 import favoritesRouter from "./routes/favorites.route";
-import contactsRouter from "./routes/contacts.route"; 
+import contactsRouter from "./routes/contacts.route";
 import siteImagesRouter from "./routes/siteImages.route";
-import * as Express from 'express';
 
-const app: Express.Application = express();
+const app: express.Express = express();
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  process.env.FRONTEND_URL,
+].filter((origin): origin is string => Boolean(origin));
 
 app.use(cors({
-origin: (origin, callback) => {
-const allowed = [
-"http://localhost:5173",
-"http://localhost:5174",
-process.env.FRONTEND_URL,
-].filter(Boolean);
-if (!origin || allowed.includes(origin)) {
-callback(null, true);
-} else {
-callback(new Error("Not allowed by CORS"));
-}
-},
-credentials: true,
+  origin: allowedOrigins,
+  credentials: true, // 🔥 OBLIGATOIRE pour cookies
 }));
 
-app.all("/api/auth/{*splat}", toNodeHandler(auth));
-
 app.use(express.json());
+
+// Better-auth route
+app.all("/api/auth/*", toNodeHandler(auth));
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Welcome to Rezine'za API" });

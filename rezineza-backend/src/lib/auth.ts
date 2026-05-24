@@ -10,12 +10,10 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
-  // Connexion par email et mot de passe
   emailAndPassword: {
     enabled: true,
   },
 
-  // Connexion avec Google
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -23,13 +21,14 @@ export const auth = betterAuth({
     },
   },
 
-  // URLs autorisées à faire des requêtes vers le back
-  trustedOrigins: [process.env.FRONTEND_URL ||
-    "http://localhost:3000",
+  // ✅ uniquement les FRONTENDS autorisés
+  trustedOrigins: [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5175",
-  ],
+    process.env.FRONTEND_URL,
+  ].filter((origin): origin is string => Boolean(origin)),
+
   advanced: {
     crossSubDomainCookies: {
       enabled: isProduction,
@@ -40,6 +39,5 @@ export const auth = betterAuth({
     },
   },
 
-  // Plugin admin pour gérer les rôles
   plugins: [admin()],
 });
