@@ -6,7 +6,7 @@
     "lib": ["ES2022"],
 
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
 
     "strict": true,
     "esModuleInterop": true,
@@ -19,12 +19,7 @@
     "declarationMap": true,
     "sourceMap": true,
 
-    "ignoreDeprecations": "6.0",
-
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "ignoreDeprecations": "5.0"
   },
 
   "include": ["src/**/*", "tests/**/*"],
